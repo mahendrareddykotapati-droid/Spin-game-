@@ -605,7 +605,4 @@ window.addEventListener(
 
             resizeWheel();
 
-            drawWheel();
-        }
-    }
-);
+            drawWheel
