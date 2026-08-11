@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
 
     <title>Spin Challenge</title>
 
@@ -13,27 +14,67 @@
 
 <body>
 
-    <div class="container">
+    <!-- SETUP SCREEN -->
+
+    <div id="setupScreen" class="screen">
 
         <h1>🎡 Spin Challenge</h1>
 
-        <p>Choose the number of participants</p>
+        <p>How many people are playing?</p>
 
         <input
             type="number"
             id="participantCount"
             min="2"
-            max="30"
+            max="100"
             value="10"
         >
 
-        <button onclick="createGame()">
-            CREATE GAME
+        <button onclick="createWheel()">
+            CREATE WHEEL
         </button>
 
-        <div id="gameSetup"></div>
+        <p class="info">
+            Each person takes one number.
+        </p>
 
     </div>
+
+
+    <!-- GAME SCREEN -->
+
+    <div id="gameScreen" class="screen hidden">
+
+        <h1>🎡 Spin Challenge</h1>
+
+        <div class="wheel-container">
+
+            <!-- FIXED RED POINTER -->
+
+            <div class="pointer">▼</div>
+
+            <!-- WHEEL -->
+
+            <canvas id="wheel"></canvas>
+
+        </div>
+
+        <button
+            id="spinButton"
+            onclick="spinWheel()">
+            🎡 SPIN
+        </button>
+
+        <div id="result"></div>
+
+        <button
+            class="reset-button"
+            onclick="resetGame()">
+            🔄 RESET
+        </button>
+
+    </div>
+
 
     <script src="script.js"></script>
 
