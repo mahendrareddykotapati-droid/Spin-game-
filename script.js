@@ -6,7 +6,9 @@ let currentRotation = 0;
 let spinning = false;
 
 
-/* CREATE WHEEL */
+/* =========================
+   CREATE WHEEL
+========================= */
 
 function createWheel() {
 
@@ -15,13 +17,12 @@ function createWheel() {
     );
 
     if (count < 2 || count > 100) {
-
         alert("Please choose between 2 and 100 participants.");
-
         return;
     }
 
     numberOfParticipants = count;
+    currentRotation = 0;
 
     document
         .getElementById("setupScreen")
@@ -32,12 +33,13 @@ function createWheel() {
         .classList.remove("hidden");
 
     resizeWheel();
-
     drawWheel();
 }
 
 
-/* RESIZE WHEEL */
+/* =========================
+   RESIZE WHEEL
+========================= */
 
 function resizeWheel() {
 
@@ -51,20 +53,18 @@ function resizeWheel() {
 }
 
 
-/* DRAW WHEEL */
+/* =========================
+   DRAW WHEEL
+========================= */
 
 function drawWheel() {
 
     const size = canvas.width;
-
     const center = size / 2;
-
     const radius = size / 2 - 5;
 
-    const anglePerSection =
-        (2 * Math.PI) /
-        numberOfParticipants;
-
+    const sectionAngle =
+        (2 * Math.PI) / numberOfParticipants;
 
     ctx.clearRect(
         0,
@@ -74,6 +74,17 @@ function drawWheel() {
     );
 
 
+    /* BLUE → WHITE → GREEN */
+
+    const colors = [
+        "#2563eb",
+        "#ffffff",
+        "#16a34a"
+    ];
+
+
+    /* DRAW EACH SECTION */
+
     for (
         let i = 0;
         i < numberOfParticipants;
@@ -82,27 +93,21 @@ function drawWheel() {
 
         const startAngle =
             -Math.PI / 2 +
-            i * anglePerSection +
-            currentRotation;
+            currentRotation +
+            i * sectionAngle;
 
         const endAngle =
             startAngle +
-            anglePerSection;
+            sectionAngle;
 
 
-        /* BLUE → WHITE → GREEN */
-
-        const colors = [
-            "#2563eb",  // Blue
-            "#ffffff",  // White
-            "#16a34a"   // Green
-        ];
+        /* SECTION COLOR */
 
         ctx.fillStyle =
             colors[i % 3];
 
 
-        /* DRAW SECTION */
+        /* SECTION */
 
         ctx.beginPath();
 
@@ -126,8 +131,7 @@ function drawWheel() {
 
         /* SECTION BORDER */
 
-        ctx.strokeStyle = "black";
-
+        ctx.strokeStyle = "#000000";
         ctx.lineWidth = 2;
 
         ctx.stroke();
@@ -137,7 +141,7 @@ function drawWheel() {
 
         const middleAngle =
             startAngle +
-            anglePerSection / 2;
+            sectionAngle / 2;
 
         const textRadius =
             radius * 0.72;
@@ -159,11 +163,6 @@ function drawWheel() {
 
         ctx.translate(x, y);
 
-        ctx.rotate(
-            middleAngle +
-            Math.PI / 2
-        );
-
 
         let fontSize;
 
@@ -173,11 +172,11 @@ function drawWheel() {
 
         } else if (numberOfParticipants <= 50) {
 
-            fontSize = 16;
+            fontSize = 15;
 
         } else {
 
-            fontSize = 11;
+            fontSize = 10;
         }
 
 
@@ -185,21 +184,20 @@ function drawWheel() {
             `bold ${fontSize}px Arial`;
 
 
-        /* BLACK ON WHITE,
-           WHITE ON BLUE/GREEN */
+        /* BLACK NUMBER ON WHITE
+           WHITE NUMBER ON BLUE/GREEN */
 
         if (i % 3 === 1) {
 
-            ctx.fillStyle = "black";
+            ctx.fillStyle = "#000000";
 
         } else {
 
-            ctx.fillStyle = "white";
+            ctx.fillStyle = "#ffffff";
         }
 
 
         ctx.textAlign = "center";
-
         ctx.textBaseline = "middle";
 
 
@@ -213,7 +211,9 @@ function drawWheel() {
     }
 
 
-    /* OUTER CIRCLE */
+    /* =========================
+       OUTER CIRCLE
+    ========================= */
 
     ctx.beginPath();
 
@@ -225,14 +225,15 @@ function drawWheel() {
         2 * Math.PI
     );
 
-    ctx.strokeStyle = "black";
-
+    ctx.strokeStyle = "#000000";
     ctx.lineWidth = 5;
 
     ctx.stroke();
 
 
-    /* CENTER CIRCLE */
+    /* =========================
+       CENTER CIRCLE
+    ========================= */
 
     ctx.beginPath();
 
@@ -248,19 +249,22 @@ function drawWheel() {
 
     ctx.fill();
 
-    ctx.strokeStyle = "white";
-
+    ctx.strokeStyle = "#ffffff";
     ctx.lineWidth = 3;
 
     ctx.stroke();
 }
 
 
-/* SPIN WHEEL */
+/* =========================
+   SPIN WHEEL
+========================= */
 
 function spinWheel() {
 
-    if (spinning) return;
+    if (spinning) {
+        return;
+    }
 
     spinning = true;
 
@@ -276,7 +280,9 @@ function spinWheel() {
     ).innerHTML = "";
 
 
-    /* RANDOM WINNER */
+    /* =========================
+       SELECT RANDOM NUMBER
+    ========================= */
 
     const winner =
         Math.floor(
@@ -285,16 +291,19 @@ function spinWheel() {
         ) + 1;
 
 
+    /* ANGLE OF ONE SECTION */
+
     const sectionAngle =
         (2 * Math.PI) /
         numberOfParticipants;
 
 
     /*
-       Calculate the rotation
-       required to put the
-       selected number under
-       the red pointer.
+       The red pointer is at the top.
+
+       We want the CENTER of the
+       selected section to reach
+       the top pointer.
     */
 
     const targetAngle =
@@ -305,41 +314,82 @@ function spinWheel() {
         );
 
 
-    /* NUMBER OF FULL SPINS */
+    /*
+       IMPORTANT FIX:
+
+       Always add 8 COMPLETE rotations.
+
+       This guarantees that the wheel
+       visibly spins even when there
+       are 50, 60 or 100 numbers.
+    */
+
+    const fullSpins = 8;
 
     const extraSpins =
-        6 * 2 * Math.PI;
+        fullSpins * 2 * Math.PI;
 
 
     const startRotation =
         currentRotation;
 
 
-    const finalRotation =
-        targetAngle +
-        extraSpins;
+    /*
+       Calculate final position.
+    */
+
+    let finalRotation =
+        startRotation +
+        extraSpins +
+        targetAngle;
 
 
-    const duration = 5000;
+    /*
+       Make sure final position is
+       always ahead of the current
+       position.
+    */
+
+    while (
+        finalRotation <= startRotation
+    ) {
+
+        finalRotation +=
+            2 * Math.PI;
+    }
+
+
+    /* =========================
+       ANIMATION
+    ========================= */
+
+    const duration = 6000;
 
     const startTime =
         performance.now();
 
 
-    function animate(time) {
+    function animate(currentTime) {
 
         const elapsed =
-            time - startTime;
+            currentTime - startTime;
 
 
-        const progress =
-            Math.min(
-                elapsed / duration,
-                1
-            );
+        let progress =
+            elapsed / duration;
 
 
-        /* SMOOTH SLOW-DOWN */
+        if (progress > 1) {
+            progress = 1;
+        }
+
+
+        /*
+           Smooth ease-out:
+
+           Fast at beginning
+           Slow at end
+        */
 
         const eased =
             1 -
@@ -368,12 +418,18 @@ function spinWheel() {
 
         } else {
 
+            /* FINAL POSITION */
+
             currentRotation =
                 finalRotation;
 
             drawWheel();
 
+
+            /* SHOW WINNER */
+
             showResult(winner);
+
 
             spinning = false;
 
@@ -388,7 +444,9 @@ function spinWheel() {
 }
 
 
-/* SHOW RESULT */
+/* =========================
+   SHOW RESULT
+========================= */
 
 function showResult(number) {
 
@@ -397,13 +455,18 @@ function showResult(number) {
             "result"
         );
 
-    result.innerHTML =
-        `🎯 NUMBER ${number}<br>
-        <span>It's your turn!</span>`;
+
+    result.innerHTML = `
+        🎯 NUMBER ${number}
+        <br>
+        <span>It's your turn!</span>
+    `;
 }
 
 
-/* RESET GAME */
+/* =========================
+   RESET GAME
+========================= */
 
 function resetGame() {
 
@@ -428,7 +491,9 @@ function resetGame() {
 }
 
 
-/* HANDLE PHONE RESIZING */
+/* =========================
+   PHONE RESIZE
+========================= */
 
 window.addEventListener(
     "resize",
@@ -442,7 +507,6 @@ window.addEventListener(
         ) {
 
             resizeWheel();
-
             drawWheel();
         }
     }
