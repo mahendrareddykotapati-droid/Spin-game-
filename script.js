@@ -1,519 +1,571 @@
-let numberOfParticipants = 10;
+/* =====================================================
+   SPIN CHALLENGE
+===================================================== */
+
+
+/* =========================
+   VARIABLES
+========================= */
+
+let participantCount = 0;
+
+let participants = [];
+
 let currentRotation = 0;
+
 let spinning = false;
+
+
+/* =========================
+   RAINBOW COLOURS
+========================= */
+
+const rainbowColors = [
+    "#ff0000", // Red
+    "#ff7f00", // Orange
+    "#ffff00", // Yellow
+    "#00cc44", // Green
+    "#00cfff", // Cyan
+    "#0066ff", // Blue
+    "#8a2be2", // Violet
+    "#ff00aa"  // Pink
+];
+
+
+/* =========================
+   GET ELEMENTS
+========================= */
+
+const participantInput =
+    document.getElementById("participantCount");
+
+const createWheelBtn =
+    document.getElementById("createWheelBtn");
+
+const spinBtn =
+    document.getElementById("spinBtn");
+
+const wheel =
+    document.getElementById("wheel");
+
+const numbersContainer =
+    document.getElementById("numbersContainer");
+
+const gameSection =
+    document.getElementById("gameSection");
+
+const result =
+    document.getElementById("result");
 
 
 /* =========================
    CREATE WHEEL
 ========================= */
 
+createWheelBtn.addEventListener("click", createWheel);
+
+
+/* =========================
+   CREATE WHEEL FUNCTION
+========================= */
+
 function createWheel() {
 
-    const input = document.getElementById("participantCount");
+    const count = Number(participantInput.value);
 
-    if (!input) {
-        alert("Participant input not found.");
+
+    /* -------------------------
+       VALIDATION
+    ------------------------- */
+
+    if (!Number.isInteger(count)) {
+
+        alert("Please enter the number of participants.");
+
         return;
     }
 
-    const count = Number(input.value);
 
-    if (count < 2 || count > 100) {
-        alert("Please enter a number between 2 and 100.");
+    if (count < 2) {
+
+        alert("Minimum participants is 2.");
+
         return;
     }
 
-    numberOfParticipants = count;
+
+    if (count > 100) {
+
+        alert("Maximum participants is 100.");
+
+        return;
+    }
+
+
+    /* -------------------------
+       SAVE COUNT
+    ------------------------- */
+
+    participantCount = count;
+
+
+    /* -------------------------
+       CREATE NUMBERS
+    ------------------------- */
+
+    participants = [];
+
+    for (let i = 1; i <= count; i++) {
+
+        participants.push(i);
+
+    }
+
+
+    /* -------------------------
+       RANDOMIZE NUMBERS
+    ------------------------- */
+
+    shuffleArray(participants);
+
+
+    /* -------------------------
+       RESET ROTATION
+    ------------------------- */
+
     currentRotation = 0;
 
-    const setupScreen =
-        document.getElementById("setupScreen");
+    wheel.style.transition = "none";
 
-    const gameScreen =
-        document.getElementById("gameScreen");
+    wheel.style.transform =
+        "rotate(0deg)";
 
-    if (!setupScreen || !gameScreen) {
-        alert("Game screen elements are missing from index.html.");
-        return;
-    }
 
-    setupScreen.classList.add("hidden");
-    gameScreen.classList.remove("hidden");
+    /* -------------------------
+       CREATE WHEEL
+    ------------------------- */
 
-    resizeWheel();
     drawWheel();
+
+
+    /* -------------------------
+       SHOW GAME
+    ------------------------- */
+
+    gameSection.style.display = "flex";
+
+
+    result.textContent =
+        "Wheel created! Tap SPIN 🎯";
+
+
+    spinBtn.disabled = false;
+
 }
 
 
-/* =========================
-   GET CANVAS
-========================= */
-
-function getCanvas() {
-    return document.getElementById("wheel");
-}
-
-
-/* =========================
-   RESIZE WHEEL
-========================= */
-
-function resizeWheel() {
-
-    const canvas = getCanvas();
-
-    if (!canvas) return;
-
-    const size = Math.min(
-        window.innerWidth * 0.9,
-        500
-    );
-
-    canvas.width = size;
-    canvas.height = size;
-}
-
-
-/* =========================
+/* =====================================================
    DRAW WHEEL
-========================= */
+===================================================== */
 
 function drawWheel() {
 
-    const canvas = getCanvas();
-
-    if (!canvas) return;
-
-    const ctx = canvas.getContext("2d");
-
-    const size = canvas.width;
-    const center = size / 2;
-    const radius = size / 2 - 5;
-
-    const sectionAngle =
-        (2 * Math.PI) / numberOfParticipants;
-
-    ctx.clearRect(
-        0,
-        0,
-        size,
-        size
-    );
+    numbersContainer.innerHTML = "";
 
 
-    /* BLUE → WHITE → GREEN */
-
-    const colors = [
-        "#2563eb",
-        "#ffffff",
-        "#16a34a"
-    ];
+    const segmentAngle =
+        360 / participantCount;
 
 
-    /* DRAW SECTIONS */
+    /* -------------------------
+       CREATE COLOUR LIST
+    ------------------------- */
 
-    for (
-        let i = 0;
-        i < numberOfParticipants;
-        i++
-    ) {
-
-        const startAngle =
-            -Math.PI / 2 +
-            currentRotation +
-            i * sectionAngle;
-
-        const endAngle =
-            startAngle +
-            sectionAngle;
+    const colors =
+        createColorPattern(participantCount);
 
 
-        /* COLOR */
+    /* -------------------------
+       CREATE SEGMENT BACKGROUND
+    ------------------------- */
 
-        ctx.fillStyle =
-            colors[i % 3];
+    let gradientParts = [];
 
 
-        /* SECTION */
+    for (let i = 0; i < participantCount; i++) {
 
-        ctx.beginPath();
+        const start =
+            i * segmentAngle;
 
-        ctx.moveTo(
-            center,
-            center
+        const end =
+            (i + 1) * segmentAngle;
+
+        gradientParts.push(
+            `${colors[i]} ${start}deg ${end}deg`
         );
 
-        ctx.arc(
-            center,
-            center,
-            radius,
-            startAngle,
-            endAngle
-        );
-
-        ctx.closePath();
-
-        ctx.fill();
+    }
 
 
-        /* BORDER */
-
-        ctx.strokeStyle = "#000000";
-        ctx.lineWidth = 2;
-
-        ctx.stroke();
+    wheel.style.background =
+        `conic-gradient(from -90deg, ${gradientParts.join(",")})`;
 
 
-        /* NUMBER */
+    /* -------------------------
+       CREATE NUMBERS
+    ------------------------- */
 
-        const middleAngle =
-            startAngle +
-            sectionAngle / 2;
+    for (let i = 0; i < participantCount; i++) {
 
-        const textRadius =
-            radius * 0.72;
+        const number =
+            document.createElement("div");
 
-        const x =
-            center +
-            Math.cos(middleAngle) *
-            textRadius;
+        number.className = "number";
 
-        const y =
-            center +
-            Math.sin(middleAngle) *
-            textRadius;
+        number.textContent =
+            participants[i];
 
 
-        ctx.save();
-
-        ctx.translate(x, y);
-
+        /* -------------------------
+           NUMBER SIZE
+        ------------------------- */
 
         let fontSize;
 
-        if (numberOfParticipants <= 20) {
+        if (participantCount <= 10) {
 
-            fontSize = 24;
+            fontSize = 25;
 
-        } else if (numberOfParticipants <= 50) {
+        } else if (participantCount <= 20) {
 
-            fontSize = 15;
+            fontSize = 20;
 
-        } else {
+        } else if (participantCount <= 40) {
 
-            fontSize = 10;
-        }
+            fontSize = 14;
 
+        } else if (participantCount <= 70) {
 
-        ctx.font =
-            `bold ${fontSize}px Arial`;
-
-        /* NUMBER COLOR */
-
-        if (i % 3 === 1) {
-
-            ctx.fillStyle = "#000000";
+            fontSize = 11;
 
         } else {
 
-            ctx.fillStyle = "#ffffff";
+            fontSize = 9;
+
         }
 
 
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
+        number.style.fontSize =
+            `${fontSize}px`;
 
 
-        ctx.fillText(
-            i + 1,
-            0,
-            0
-        );
+        /* -------------------------
+           NUMBER POSITION
+        ------------------------- */
+
+        const angle =
+            i * segmentAngle +
+            segmentAngle / 2;
 
 
-        ctx.restore();
+        /*
+           Keep numbers near the outer
+           edge of the wheel.
+        */
+
+        const radiusPercent =
+            participantCount <= 20
+                ? 38
+                : 42;
+
+
+        number.style.width =
+            `${Math.max(35, segmentAngle * 0.85)}px`;
+
+        number.style.height =
+            `${Math.max(25, segmentAngle * 0.35)}px`;
+
+
+        number.style.transform =
+            `
+            translate(-50%, -50%)
+            rotate(${angle}deg)
+            translateY(-${radiusPercent * 1.9}px)
+            rotate(${-angle}deg)
+            `;
+
+
+        numbersContainer.appendChild(number);
+
     }
 
-
-    /* OUTER CIRCLE */
-
-    ctx.beginPath();
-
-    ctx.arc(
-        center,
-        center,
-        radius,
-        0,
-        2 * Math.PI
-    );
-
-    ctx.strokeStyle = "#000000";
-    ctx.lineWidth = 5;
-
-    ctx.stroke();
-
-
-    /* CENTER */
-
-    ctx.beginPath();
-
-    ctx.arc(
-        center,
-        center,
-        25,
-        0,
-        2 * Math.PI
-    );
-
-    ctx.fillStyle = "#111827";
-
-    ctx.fill();
-
-    ctx.strokeStyle = "#ffffff";
-    ctx.lineWidth = 3;
-
-    ctx.stroke();
 }
 
 
-/* =========================
+/* =====================================================
+   CREATE COLOUR PATTERN
+===================================================== */
+
+function createColorPattern(count) {
+
+    const colors = [];
+
+
+    for (let i = 0; i < count; i++) {
+
+        let color;
+
+
+        /*
+           Try to choose a colour different
+           from the previous segment.
+        */
+
+        const previousColor =
+            colors[i - 1];
+
+
+        const availableColors =
+            rainbowColors.filter(
+                c => c !== previousColor
+            );
+
+
+        color =
+            availableColors[
+                Math.floor(
+                    Math.random() *
+                    availableColors.length
+                )
+            ];
+
+
+        colors.push(color);
+
+    }
+
+
+    /*
+       Fix first/last segment if they have
+       the same colour because they are
+       also neighbours on a circle.
+    */
+
+    if (
+        count > 2 &&
+        colors[0] === colors[count - 1]
+    ) {
+
+        const availableColors =
+            rainbowColors.filter(
+                c =>
+                    c !== colors[count - 2] &&
+                    c !== colors[0]
+            );
+
+
+        if (availableColors.length > 0) {
+
+            colors[count - 1] =
+                availableColors[
+                    Math.floor(
+                        Math.random() *
+                        availableColors.length
+                    )
+                ];
+
+        }
+
+    }
+
+
+    return colors;
+
+}
+
+
+/* =====================================================
+   SHUFFLE ARRAY
+===================================================== */
+
+function shuffleArray(array) {
+
+    for (
+        let i = array.length - 1;
+        i > 0;
+        i--
+    ) {
+
+        const j =
+            Math.floor(
+                Math.random() * (i + 1)
+            );
+
+
+        [
+            array[i],
+            array[j]
+        ] =
+        [
+            array[j],
+            array[i]
+        ];
+
+    }
+
+}
+
+
+/* =====================================================
+   SPIN BUTTON
+===================================================== */
+
+spinBtn.addEventListener("click", spinWheel);
+
+
+/* =====================================================
    SPIN WHEEL
-========================= */
+===================================================== */
 
 function spinWheel() {
 
-    if (spinning) return;
+    if (spinning) {
+        return;
+    }
+
+
+    if (participantCount < 2) {
+
+        alert("Create the wheel first.");
+
+        return;
+    }
+
 
     spinning = true;
 
-    const button =
-        document.getElementById("spinButton");
+    spinBtn.disabled = true;
 
-    if (button) {
-        button.disabled = true;
-    }
+    createWheelBtn.disabled = true;
 
-    const result =
-        document.getElementById("result");
-
-    if (result) {
-        result.innerHTML = "";
-    }
+    participantInput.disabled = true;
 
 
-    /* RANDOM WINNER */
+    result.textContent =
+        "Spinning... 🎡";
 
-    const winner =
+
+    /* =================================================
+       SELECT RANDOM WINNER
+    ================================================= */
+
+    const winnerIndex =
         Math.floor(
             Math.random() *
-            numberOfParticipants
-        ) + 1;
+            participantCount
+        );
 
 
-    const twoPi =
-        2 * Math.PI;
-
-    const sectionAngle =
-        twoPi / numberOfParticipants;
+    const winner =
+        participants[winnerIndex];
 
 
-    /* WINNER CENTER */
+    /* =================================================
+       CALCULATE SEGMENT ANGLE
+    ================================================= */
 
-    const winnerAngle =
-        (winner - 1) *
-        sectionAngle +
-        sectionAngle / 2;
-
-
-    /* CURRENT POSITION */
-
-    let currentNormalized =
-        currentRotation % twoPi;
-
-    if (currentNormalized < 0) {
-        currentNormalized += twoPi;
-    }
+    const segmentAngle =
+        360 / participantCount;
 
 
-    /* TARGET */
+    /*
+       Find the center of the winner's segment.
+    */
 
-    const targetRotation =
-        -winnerAngle;
-
-
-    let rotationDifference =
-        targetRotation -
-        currentNormalized;
+    const winnerCenterAngle =
+        winnerIndex * segmentAngle +
+        segmentAngle / 2;
 
 
-    rotationDifference =
-        rotationDifference % twoPi;
+    /* =================================================
+       EXACTLY 10 ROTATIONS
+    ================================================= */
+
+    const tenRotations =
+        360 * 10;
 
 
-    if (rotationDifference < 0) {
-        rotationDifference += twoPi;
+    /*
+       Current rotation modulo 360.
+    */
+
+    const currentMod =
+        ((currentRotation % 360) + 360) % 360;
+
+
+    /*
+       Calculate the smallest positive rotation
+       needed to place winner at the red needle.
+    */
+
+    let alignment =
+        (360 - winnerCenterAngle - currentMod) % 360;
+
+
+    if (alignment < 0) {
+        alignment += 360;
     }
 
 
     /*
-       AT LEAST 10 COMPLETE ROTATIONS
+       Total rotation:
+
+       10 complete rotations
+       +
+       alignment
+
+       Every spin therefore has the
+       same 10 full rotations.
     */
 
-    const fullSpins = 10;
-
     const totalRotation =
-        fullSpins * twoPi +
-        rotationDifference;
+        tenRotations + alignment;
 
 
-    const startRotation =
-        currentRotation;
-
-
-    const finalRotation =
-        startRotation +
+    currentRotation +=
         totalRotation;
 
 
-    /*
-       EXACTLY 10 SECONDS
-    */
+    /* =================================================
+       10 SECOND SPIN
+    ================================================= */
 
-    const duration = 10000;
-
-    const startTime =
-        performance.now();
+    wheel.style.transition =
+        "transform 10s cubic-bezier(0.12, 0.72, 0.18, 1)";
 
 
-    function animate(currentTime) {
-
-        const elapsed =
-            currentTime -
-            startTime;
-
-        let progress =
-            elapsed / duration;
+    wheel.style.transform =
+        `rotate(${currentRotation}deg)`;
 
 
-        if (progress > 1) {
-            progress = 1;
-        }
+    /* =================================================
+       SHOW RESULT AFTER EXACTLY 10 SECONDS
+    ================================================= */
+
+    setTimeout(() => {
+
+        result.innerHTML =
+            `🏆 Lucky Number: <strong>${winner}</strong>`;
 
 
-        /* SMOOTH SLOW DOWN */
+        spinning = false;
 
-        const eased =
-            1 -
-            Math.pow(
-                1 - progress,
-                4
-            );
+        spinBtn.disabled = false;
 
+        createWheelBtn.disabled = false;
 
-        currentRotation =
-            startRotation +
-            totalRotation * eased;
+        participantInput.disabled = false;
 
+    }, 10000);
 
-        drawWheel();
-
-
-        if (progress < 1) {
-
-            requestAnimationFrame(
-                animate
-            );
-
-        } else {
-
-            currentRotation =
-                finalRotation;
-
-            drawWheel();
-
-            showResult(winner);
-
-            spinning = false;
-
-            if (button) {
-                button.disabled = false;
-            }
-        }
-    }
-
-
-    requestAnimationFrame(
-        animate
-    );
-}
-
-
-/* =========================
-   RESULT
-========================= */
-
-function showResult(number) {
-
-    const result =
-        document.getElementById("result");
-
-    if (!result) return;
-
-    result.innerHTML = `
-        🎯 NUMBER ${number}
-        <br>
-        <span>It's your turn!</span>
-    `;
-}
-
-
-/* =========================
-   RESET
-========================= */
-
-function resetGame() {
-
-    currentRotation = 0;
-    spinning = false;
-
-    const gameScreen =
-        document.getElementById("gameScreen");
-
-    const setupScreen =
-        document.getElementById("setupScreen");
-
-    if (gameScreen) {
-        gameScreen.classList.add("hidden");
-    }
-
-    if (setupScreen) {
-        setupScreen.classList.remove("hidden");
-    }
-
-    const result =
-        document.getElementById("result");
-
-    if (result) {
-        result.innerHTML = "";
-    }
-}
-
-
-/* =========================
-   SCREEN RESIZE
-========================= */
-
-window.addEventListener(
-    "resize",
-    function () {
-
-        const gameScreen =
-            document.getElementById("gameScreen");
-
-        if (
-            gameScreen &&
-            !gameScreen.classList.contains("hidden")
-        ) {
-
-            resizeWheel();
-            drawWheel(
+           }
