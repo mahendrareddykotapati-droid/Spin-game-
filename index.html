@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Spin Challenge</title>
@@ -22,7 +24,7 @@
             id="participantCount"
             min="2"
             max="30"
-            value="10"
+            value="7"
         >
 
         <button onclick="createParticipants()">
@@ -31,9 +33,18 @@
 
         <div id="participants"></div>
 
+        <button
+            id="startGameButton"
+            onclick="startGame()"
+            style="display: none;"
+        >
+            🚀 START GAME
+        </button>
+
     </div>
 
     <script src="script.js"></script>
 
 </body>
+
 </html>
