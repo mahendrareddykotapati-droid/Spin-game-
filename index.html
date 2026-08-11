@@ -1,83 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta name="viewport"
-        content="width=device-width, initial-scale=1.0">
-
-    <title>Spin Challenge</title>
+    <title>Participant Spin Wheel</title>
 
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-    <!-- SETUP SCREEN -->
+    <div class="container">
 
-    <div id="setupScreen" class="screen">
+        <h1>🎡 Participant Spin Wheel</h1>
 
-        <h1>🎡 Spin Challenge</h1>
+        <div class="input-section">
 
-        <p>How many people are playing?</p>
+            <label for="participants">
+                Number of Participants
+            </label>
 
-        <input
-            type="number"
-            id="participantCount"
-            min="2"
-            max="100"
-            value="10"
-        >
+            <input
+                type="number"
+                id="participants"
+                min="2"
+                max="100"
+                placeholder="Enter number"
+            >
 
-        <button onclick="createWheel()">
-            CREATE WHEEL
-        </button>
-
-        <p class="info">
-            Each person takes one number.
-        </p>
-
-    </div>
-
-
-    <!-- GAME SCREEN -->
-
-    <div id="gameScreen" class="screen hidden">
-
-        <h1>🎡 Spin Challenge</h1>
-
-        <div class="wheel-container">
-
-            <!-- FIXED RED POINTER -->
-
-            <div class="pointer">▼</div>
-
-            <!-- WHEEL -->
-
-            <canvas id="wheel"></canvas>
+            <button id="createWheel">
+                Create Wheel
+            </button>
 
         </div>
 
-        <button
-            id="spinButton"
-            onclick="spinWheel()">
-            🎡 SPIN
+
+        <!-- Wheel Area -->
+
+        <div class="wheel-container">
+
+            <!-- Pointer -->
+
+            <div class="pointer">
+                ▼
+            </div>
+
+            <!-- Wheel -->
+
+            <div id="wheel"></div>
+
+        </div>
+
+
+        <!-- Spin Button -->
+
+        <button id="spinBtn" style="display: none;">
+            🎯 SPIN
         </button>
+
+
+        <!-- Result -->
 
         <div id="result"></div>
 
-        <button
-            class="reset-button"
-            onclick="resetGame()">
-            🔄 RESET
-        </button>
-
     </div>
 
+
+    <!-- JavaScript -->
 
     <script src="script.js"></script>
 
 </body>
-
 </html>
+
+Your project should now look like this
+
+Participant Wheel
+│
+├── index.html
+├── style.css
+└── script.js
+
+The important IDs are:
+
+participants
+createWheel
+wheel
+spinBtn
+result
+
+These are exactly the IDs used in the "script.js", so the HTML and JavaScript will connect correctly.
