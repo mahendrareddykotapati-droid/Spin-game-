@@ -1,11 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-
-    <meta name="viewport"
-        content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Spin Challenge</title>
 
@@ -14,64 +11,66 @@
 
 <body>
 
-    <!-- SETUP SCREEN -->
-
-    <div id="setupScreen" class="screen">
+    <div class="container">
 
         <h1>🎡 Spin Challenge</h1>
+        <p class="subtitle">Spin the wheel and find your lucky number!</p>
 
-        <p>How many people are playing?</p>
+        <!-- Participant Input -->
+        <div class="input-section">
 
-        <input
-            type="number"
-            id="participantCount"
-            min="2"
-            max="100"
-            value="10"
-        >
+            <label for="participantCount">
+                Number of Participants
+            </label>
 
-        <button onclick="createWheel()">
-            CREATE WHEEL
-        </button>
+            <input
+                type="number"
+                id="participantCount"
+                min="2"
+                max="100"
+                placeholder="Enter 2 - 100"
+            >
 
-        <p class="info">
-            Each person takes one number.
-        </p>
-
-    </div>
-
-
-    <!-- GAME SCREEN -->
-
-    <div id="gameScreen" class="screen hidden">
-
-        <h1>🎡 Spin Challenge</h1>
-
-        <div class="wheel-container">
-
-            <!-- FIXED RED POINTER -->
-
-            <div class="pointer">▼</div>
-
-            <!-- WHEEL -->
-
-            <canvas id="wheel"></canvas>
+            <button id="createWheelBtn">
+                Create Wheel
+            </button>
 
         </div>
 
-        <button
-            id="spinButton"
-            onclick="spinWheel()">
-            🎡 SPIN
-        </button>
 
-        <div id="result"></div>
+        <!-- Wheel Section -->
+        <div id="gameSection" class="game-section">
 
-        <button
-            class="reset-button"
-            onclick="resetGame()">
-            🔄 RESET
-        </button>
+            <div class="wheel-container">
+
+                <!-- Red Needle -->
+                <div class="needle"></div>
+
+                <!-- Wheel -->
+                <div id="wheel" class="wheel">
+
+                    <div id="numbersContainer"></div>
+
+                </div>
+
+                <!-- Center Circle -->
+                <div class="center-circle"></div>
+
+            </div>
+
+
+            <!-- Spin Button -->
+            <button id="spinBtn" class="spin-btn">
+                SPIN
+            </button>
+
+
+            <!-- Result -->
+            <div id="result" class="result">
+                Winner will appear here
+            </div>
+
+        </div>
 
     </div>
 
@@ -79,5 +78,4 @@
     <script src="script.js"></script>
 
 </body>
-
 </html>
