@@ -17,29 +17,21 @@
 
         <h1>🎡 Spin Challenge</h1>
 
-        <p>Enter number of participants</p>
+        <p>Choose the number of participants</p>
 
         <input
             type="number"
             id="participantCount"
             min="2"
             max="30"
-            value="7"
+            value="10"
         >
 
-        <button onclick="createParticipants()">
-            CREATE
+        <button onclick="createGame()">
+            CREATE GAME
         </button>
 
-        <div id="participants"></div>
-
-        <button
-            id="startGameButton"
-            onclick="startGame()"
-            style="display: none;"
-        >
-            🚀 START GAME
-        </button>
+        <div id="gameSetup"></div>
 
     </div>
 
