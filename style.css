@@ -4,21 +4,38 @@
 
 body {
     margin: 0;
+    min-height: 100vh;
+
     font-family: Arial, sans-serif;
+
     background: #111827;
+
     color: white;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
     text-align: center;
 }
 
-.container {
-    width: 90%;
-    max-width: 500px;
-    margin: 50px auto;
+.screen {
+    width: 100%;
+    max-width: 600px;
+
+    padding: 20px;
+}
+
+.hidden {
+    display: none;
 }
 
 h1 {
     font-size: 32px;
-    margin-bottom: 10px;
+
+    margin-bottom: 15px;
 }
 
 p {
@@ -26,26 +43,128 @@ p {
 }
 
 input {
-    width: 120px;
+    width: 130px;
+
     padding: 12px;
-    font-size: 18px;
+
+    font-size: 20px;
+
     text-align: center;
-    border-radius: 8px;
+
     border: none;
+
+    border-radius: 10px;
+
     margin: 10px;
 }
 
 button {
     display: block;
+
     margin: 15px auto;
-    padding: 12px 30px;
+
+    padding: 14px 30px;
+
     font-size: 18px;
+
     font-weight: bold;
+
     border: none;
-    border-radius: 8px;
+
+    border-radius: 10px;
+
     cursor: pointer;
 }
 
-#participants {
-    margin-top: 25px;
+button:active {
+    transform: scale(0.96);
+}
+
+.info {
+    opacity: 0.75;
+
+    font-size: 15px;
+}
+
+
+/* WHEEL */
+
+.wheel-container {
+    position: relative;
+
+    width: min(90vw, 500px);
+
+    height: min(90vw, 500px);
+
+    margin: 25px auto;
+}
+
+
+/* CANVAS */
+
+#wheel {
+    width: 100%;
+
+    height: 100%;
+
+    display: block;
+}
+
+
+/* RED POINTER */
+
+.pointer {
+    position: absolute;
+
+    top: -8px;
+
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    z-index: 10;
+
+    font-size: 45px;
+
+    color: red;
+
+    text-shadow:
+        0 2px 4px black;
+}
+
+
+/* SPIN BUTTON */
+
+#spinButton {
+    background: #22c55e;
+
+    color: white;
+
+    font-size: 22px;
+
+    padding: 15px 45px;
+}
+
+
+/* RESULT */
+
+#result {
+    min-height: 60px;
+
+    margin-top: 15px;
+
+    font-size: 25px;
+
+    font-weight: bold;
+}
+
+
+/* RESET */
+
+.reset-button {
+    background: #374151;
+
+    color: white;
+
+    font-size: 15px;
 }
