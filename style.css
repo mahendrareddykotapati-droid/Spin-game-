@@ -1,170 +1,393 @@
 * {
+    margin: 0;
+    padding: 0;
     box-sizing: border-box;
 }
 
+
 body {
-    margin: 0;
     min-height: 100vh;
 
-    font-family: Arial, sans-serif;
+    font-family: Arial, Helvetica, sans-serif;
 
-    background: #111827;
+    background:
+        linear-gradient(
+            135deg,
+            #16002e,
+            #24005c,
+            #001b4d
+        );
 
     color: white;
 
     display: flex;
-
     justify-content: center;
-
     align-items: center;
-
-    text-align: center;
-}
-
-.screen {
-    width: 100%;
-    max-width: 600px;
 
     padding: 20px;
 }
 
-.hidden {
-    display: none;
+
+.container {
+    width: 100%;
+    max-width: 600px;
+
+    text-align: center;
 }
+
+
+/* =========================
+   TITLE
+========================= */
 
 h1 {
-    font-size: 32px;
+    font-size: 38px;
+    margin-bottom: 8px;
 
-    margin-bottom: 15px;
+    background:
+        linear-gradient(
+            90deg,
+            red,
+            orange,
+            yellow,
+            lime,
+            cyan,
+            blue,
+            violet
+        );
+
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
-p {
+
+.subtitle {
+    color: #dddddd;
+    margin-bottom: 25px;
+}
+
+
+/* =========================
+   INPUT SECTION
+========================= */
+
+.input-section {
+    background: rgba(255, 255, 255, 0.1);
+
+    padding: 20px;
+
+    border-radius: 18px;
+
+    backdrop-filter: blur(10px);
+
+    margin-bottom: 30px;
+}
+
+
+.input-section label {
+    display: block;
+
     font-size: 18px;
+
+    margin-bottom: 10px;
 }
 
-input {
-    width: 130px;
 
-    padding: 12px;
+.input-section input {
+    width: 100%;
 
-    font-size: 20px;
+    padding: 14px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    font-size: 18px;
 
     text-align: center;
 
+    outline: none;
+
+    margin-bottom: 12px;
+}
+
+
+#createWheelBtn {
+    width: 100%;
+
+    padding: 14px;
+
     border: none;
 
     border-radius: 10px;
 
-    margin: 10px;
-}
-
-button {
-    display: block;
-
-    margin: 15px auto;
-
-    padding: 14px 30px;
-
-    font-size: 18px;
+    font-size: 17px;
 
     font-weight: bold;
 
-    border: none;
-
-    border-radius: 10px;
-
     cursor: pointer;
+
+    color: white;
+
+    background:
+        linear-gradient(
+            90deg,
+            #ff0080,
+            #7928ca,
+            #00c6ff
+        );
+
+    transition: transform 0.2s;
 }
 
-button:active {
-    transform: scale(0.96);
-}
 
-.info {
-    opacity: 0.75;
-
-    font-size: 15px;
+#createWheelBtn:hover {
+    transform: scale(1.03);
 }
 
 
-/* WHEEL */
+/* =========================
+   GAME SECTION
+========================= */
+
+.game-section {
+    display: none;
+
+    flex-direction: column;
+
+    align-items: center;
+}
+
+
+/* =========================
+   WHEEL CONTAINER
+========================= */
 
 .wheel-container {
     position: relative;
 
-    width: min(90vw, 500px);
+    width: min(90vw, 480px);
+    height: min(90vw, 480px);
 
-    height: min(90vw, 500px);
+    display: flex;
 
-    margin: 25px auto;
+    justify-content: center;
+    align-items: center;
 }
 
 
-/* CANVAS */
+/* =========================
+   WHEEL
+========================= */
 
-#wheel {
+.wheel {
+    position: relative;
+
     width: 100%;
-
     height: 100%;
 
-    display: block;
+    border-radius: 50%;
+
+    border: 8px solid white;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 0 0 5px rgba(255,255,255,0.15),
+        0 10px 40px rgba(0,0,0,0.5);
+
+    transform: rotate(0deg);
+
+    will-change: transform;
 }
 
 
-/* RED POINTER */
+/* =========================
+   NUMBER
+========================= */
 
-.pointer {
+.number {
     position: absolute;
 
-    top: -8px;
+    left: 50%;
+    top: 50%;
+
+    transform-origin: center center;
+
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    font-weight: bold;
+
+    color: white;
+
+    text-shadow:
+        1px 1px 3px black;
+
+    pointer-events: none;
+
+    user-select: none;
+}
+
+
+/* =========================
+   NEEDLE
+========================= */
+
+.needle {
+    position: absolute;
+
+    top: -4px;
 
     left: 50%;
 
     transform: translateX(-50%);
 
-    z-index: 10;
+    width: 0;
+    height: 0;
 
-    font-size: 45px;
+    border-left: 18px solid transparent;
+    border-right: 18px solid transparent;
 
-    color: red;
+    border-top: 42px solid red;
 
-    text-shadow:
-        0 2px 4px black;
+    z-index: 20;
+
+    filter:
+        drop-shadow(0 3px 3px rgba(0,0,0,0.6));
 }
 
 
-/* SPIN BUTTON */
+/* =========================
+   CENTER CIRCLE
+========================= */
 
-#spinButton {
-    background: #22c55e;
+.center-circle {
+    position: absolute;
+
+    width: 50px;
+    height: 50px;
+
+    border-radius: 50%;
+
+    background: white;
+
+    border: 6px solid #222;
+
+    z-index: 10;
+
+    box-shadow:
+        0 2px 8px rgba(0,0,0,0.5);
+}
+
+
+/* =========================
+   SPIN BUTTON
+========================= */
+
+.spin-btn {
+    margin-top: 25px;
+
+    width: 200px;
+
+    padding: 15px;
+
+    border: none;
+
+    border-radius: 50px;
+
+    font-size: 20px;
+
+    font-weight: bold;
 
     color: white;
+
+    background:
+        linear-gradient(
+            90deg,
+            #ff0055,
+            #ff8a00
+        );
+
+    cursor: pointer;
+
+    box-shadow:
+        0 5px 20px rgba(255,0,80,0.4);
+
+    transition:
+        transform 0.2s,
+        opacity 0.2s;
+}
+
+
+.spin-btn:hover {
+    transform: scale(1.05);
+}
+
+
+.spin-btn:disabled {
+    opacity: 0.5;
+
+    cursor: not-allowed;
+
+    transform: none;
+}
+
+
+/* =========================
+   RESULT
+========================= */
+
+.result {
+    margin-top: 25px;
+
+    min-height: 55px;
 
     font-size: 22px;
 
-    padding: 15px 45px;
-}
-
-
-/* RESULT */
-
-#result {
-    min-height: 60px;
-
-    margin-top: 15px;
-
-    font-size: 25px;
-
     font-weight: bold;
+
+    padding: 12px 25px;
+
+    border-radius: 15px;
+
+    background: rgba(255,255,255,0.1);
+
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
 }
 
 
-/* RESET */
+/* =========================
+   MOBILE
+========================= */
 
-.reset-button {
-    background: #374151;
+@media (max-width: 500px) {
 
-    color: white;
+    h1 {
+        font-size: 32px;
+    }
 
-    font-size: 15px;
+    .subtitle {
+        font-size: 14px;
+    }
+
+    .needle {
+        border-left-width: 14px;
+        border-right-width: 14px;
+        border-top-width: 34px;
+    }
+
+    .center-circle {
+        width: 42px;
+        height: 42px;
+    }
+
+    .spin-btn {
+        width: 180px;
+    }
 }
