@@ -1,22 +1,42 @@
+/* =========================
+   RESET
+========================= */
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+
+/* =========================
+   BODY
+========================= */
+
 body {
     min-height: 100vh;
+
     background: #210006;
+
     color: white;
+
     font-family: "Courgette", cursive;
 
     overflow-x: hidden;
 }
 
+
+/* =========================
+   MAIN CONTAINER
+========================= */
+
 .container {
     width: 100%;
+
     max-width: 700px;
+
     margin: auto;
+
     padding: 25px 20px 40px;
 }
 
@@ -27,16 +47,22 @@ body {
 
 .header {
     text-align: center;
+
     margin-bottom: 40px;
 }
 
+
 .title {
     display: flex;
+
     justify-content: center;
+
     align-items: center;
+
     gap: 10px;
 
     font-size: 42px;
+
     font-weight: bold;
 
     text-shadow:
@@ -44,32 +70,39 @@ body {
         0 0 25px #ff2600;
 }
 
+
 .title span {
     color: white;
 }
 
+
 .header p {
     margin-top: 12px;
+
     font-size: 20px;
 }
 
 
 /* =========================
-   CONTROL BOX
+   PARTICIPANT BOX
 ========================= */
 
 .control-box {
     width: 100%;
-    padding: 35px 35px;
+
+    padding: 35px;
 
     border: 1px solid #9b7000;
+
     border-radius: 30px;
 
     background: rgba(0, 0, 0, 0.25);
 
     box-shadow:
-        inset 0 0 20px rgba(255, 100, 0, 0.05);
+        inset 0 0 20px
+        rgba(255, 100, 0, 0.05);
 }
+
 
 .control-box label {
     display: block;
@@ -77,14 +110,18 @@ body {
     text-align: center;
 
     font-size: 27px;
+
     margin-bottom: 20px;
 }
 
+
 .control-box input {
     width: 100%;
+
     height: 82px;
 
     border: none;
+
     outline: none;
 
     border-radius: 18px;
@@ -92,48 +129,85 @@ body {
     text-align: center;
 
     font-family: "Courgette", cursive;
+
     font-size: 30px;
 
     background: white;
+
     color: #111;
 }
 
 
 /* =========================
-   CREATE BUTTON
+   CREATE WHEEL BUTTON
 ========================= */
 
 #createWheelBtn {
     width: 100%;
+
     height: 82px;
 
     margin-top: 22px;
 
     border: none;
+
     border-radius: 20px;
 
-    background: linear-gradient(
-        90deg,
-        #ff1200,
-        #ff8a00
-    );
+    background:
+        linear-gradient(
+            90deg,
+            #ff1200,
+            #ff8a00
+        );
 
     color: white;
 
     font-family: "Courgette", cursive;
+
     font-size: 27px;
+
     font-weight: bold;
 
     cursor: pointer;
 
     box-shadow:
-        0 0 20px rgba(255, 50, 0, 0.45);
+        0 0 20px
+        rgba(255, 50, 0, 0.45);
 
     transition: 0.2s;
 }
 
+
 #createWheelBtn:active {
     transform: scale(0.97);
+}
+
+
+#createWheelBtn:disabled {
+    opacity: 0.5;
+
+    cursor: not-allowed;
+}
+
+
+/* =========================
+   WHEEL CONTAINER
+========================= */
+
+.wheel-container {
+    position: relative;
+
+    width: min(92vw, 620px);
+
+    height: min(92vw, 620px);
+
+    margin: 55px auto 45px;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
 }
 
 
@@ -141,21 +215,9 @@ body {
    WHEEL
 ========================= */
 
-.wheel-container {
-    position: relative;
-
-    width: min(92vw, 620px);
-    height: min(92vw, 620px);
-
-    margin: 55px auto 45px;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
 #wheelCanvas {
     width: 100%;
+
     height: 100%;
 
     border-radius: 50%;
@@ -165,53 +227,63 @@ body {
     box-shadow:
         0 0 10px #ff1b00,
         0 0 25px #ff3500,
-        0 0 50px rgba(255, 50, 0, 0.65);
+        0 0 50px
+        rgba(255, 50, 0, 0.65);
 
-    transition: transform 10s cubic-bezier(
-        0.12,
-        0.75,
-        0.15,
-        1
-    );
+    /*
+     * JavaScript controls the
+     * transition during spinning.
+     */
+    transition: none;
 }
 
 
 /* =========================
-   POINTER
+   POINTER / NEEDLE
 ========================= */
 
 .pointer {
     position: absolute;
 
     top: -8px;
+
     left: 50%;
 
     transform: translateX(-50%);
 
     width: 0;
+
     height: 0;
 
+    /*
+     * BEIGE NEEDLE
+     */
     border-left: 24px solid transparent;
+
     border-right: 24px solid transparent;
 
-    border-top: 58px solid #ff1600;
+    border-top: 58px solid #F5E6C8;
 
     z-index: 10;
 
+    /*
+     * Soft beige glow
+     */
     filter:
-        drop-shadow(0 0 8px red)
-        drop-shadow(0 0 15px red);
+        drop-shadow(0 0 5px #F5E6C8)
+        drop-shadow(0 0 12px rgba(245, 230, 200, 0.65));
 }
 
 
 /* =========================
-   CENTER
+   CENTER CIRCLE
 ========================= */
 
 .center-circle {
     position: absolute;
 
     width: 75px;
+
     height: 75px;
 
     border-radius: 50%;
@@ -229,7 +301,8 @@ body {
 
     box-shadow:
         0 0 10px white,
-        0 0 20px rgba(255,255,255,0.4);
+        0 0 20px
+        rgba(255,255,255,0.4);
 
     z-index: 5;
 }
@@ -243,6 +316,7 @@ body {
     display: block;
 
     width: 325px;
+
     max-width: 80%;
 
     height: 75px;
@@ -250,43 +324,53 @@ body {
     margin: 0 auto 40px;
 
     border: none;
+
     border-radius: 50px;
 
-    background: linear-gradient(
-        90deg,
-        #ff1200,
-        #ff8a00
-    );
+    background:
+        linear-gradient(
+            90deg,
+            #ff1200,
+            #ff8a00
+        );
 
     color: white;
 
     font-family: "Courgette", cursive;
+
     font-size: 30px;
+
     font-weight: bold;
 
     cursor: pointer;
 
     box-shadow:
-        0 0 20px rgba(255, 40, 0, 0.55);
+        0 0 20px
+        rgba(255, 40, 0, 0.55);
 
     transition: 0.2s;
 }
+
 
 .spin-button:active {
     transform: scale(0.96);
 }
 
+
 .spin-button:disabled {
     opacity: 0.5;
+
+    cursor: not-allowed;
 }
 
 
 /* =========================
-   RESULT
+   RESULT BOX
 ========================= */
 
 .result-box {
     width: 390px;
+
     max-width: 90%;
 
     margin: auto;
@@ -294,6 +378,7 @@ body {
     padding: 22px;
 
     border: 1px solid #9b7000;
+
     border-radius: 25px;
 
     text-align: center;
@@ -303,8 +388,10 @@ body {
     background: rgba(0, 0, 0, 0.25);
 
     box-shadow:
-        0 0 15px rgba(255, 150, 0, 0.15);
+        0 0 15px
+        rgba(255, 150, 0, 0.15);
 }
+
 
 #resultText {
     color: white;
@@ -325,46 +412,70 @@ body {
         padding: 20px 15px 35px;
     }
 
+
     .title {
         font-size: 34px;
     }
+
 
     .header p {
         font-size: 18px;
     }
 
+
     .control-box {
         padding: 30px 20px;
     }
+
 
     .control-box label {
         font-size: 24px;
     }
 
+
     .control-box input {
         height: 80px;
+
         font-size: 28px;
     }
+
 
     #createWheelBtn {
         height: 80px;
+
         font-size: 25px;
     }
 
+
     .wheel-container {
         margin-top: 50px;
+
         margin-bottom: 45px;
     }
 
+
+    .pointer {
+        border-left-width: 21px;
+
+        border-right-width: 21px;
+
+        border-top-width: 52px;
+    }
+
+
     .center-circle {
         width: 70px;
+
         height: 70px;
     }
 
+
     .spin-button {
         height: 70px;
+
         font-size: 28px;
     }
+
 
     .result-box {
         font-size: 23px;
