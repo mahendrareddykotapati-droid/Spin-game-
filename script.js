@@ -1,6 +1,6 @@
 /* =========================
-   VARIABLES
-========================= */
+   SPIN CHALLENGE
+   ========================= */
 
 const canvas = document.getElementById("wheelCanvas");
 const ctx = canvas.getContext("2d");
@@ -17,6 +17,10 @@ const spinBtn =
 const resultText =
     document.getElementById("resultText");
 
+
+/* =========================
+   VARIABLES
+========================= */
 
 let participants = [];
 let numberOfParticipants = 16;
@@ -41,8 +45,9 @@ function shuffle(array) {
 
     for (let i = array.length - 1; i > 0; i--) {
 
-        const j =
-            Math.floor(Math.random() * (i + 1));
+        const j = Math.floor(
+            Math.random() * (i + 1)
+        );
 
         [array[i], array[j]] =
             [array[j], array[i]];
@@ -58,7 +63,7 @@ function shuffle(array) {
 
 function createParticipants(count) {
 
-    let numbers = [];
+    const numbers = [];
 
     for (let i = 1; i <= count; i++) {
         numbers.push(i);
@@ -91,7 +96,7 @@ function drawWheel() {
     const count = participants.length;
 
     const anglePerSegment =
-        (2 * Math.PI) / count;
+        (Math.PI * 2) / count;
 
 
     /* =========================
@@ -100,14 +105,24 @@ function drawWheel() {
 
     for (let i = 0; i < count; i++) {
 
+        /*
+         * First segment starts at the top.
+         * This is important because the
+         * pointer is also at the top.
+         */
+
         const startAngle =
-            i * anglePerSegment - Math.PI / 2;
+            i * anglePerSegment -
+            Math.PI / 2;
 
         const endAngle =
-            startAngle + anglePerSegment;
+            startAngle +
+            anglePerSegment;
 
 
-        /* ALTERNATE RED / ORANGE */
+        /* =========================
+           ALTERNATE RED / ORANGE
+        ========================= */
 
         if (i % 2 === 0) {
             ctx.fillStyle = RED;
@@ -118,7 +133,10 @@ function drawWheel() {
 
         ctx.beginPath();
 
-        ctx.moveTo(center, center);
+        ctx.moveTo(
+            center,
+            center
+        );
 
         ctx.arc(
             center,
@@ -168,6 +186,8 @@ function drawWheel() {
             textRadius;
 
 
+        /* FONT SIZE */
+
         let fontSize;
 
         if (count <= 15) {
@@ -205,7 +225,10 @@ function drawWheel() {
 
         ctx.textBaseline = "middle";
 
-        ctx.shadowColor = "rgba(0,0,0,0.7)";
+
+        ctx.shadowColor =
+            "rgba(0,0,0,0.8)";
+
         ctx.shadowBlur = 4;
 
 
@@ -247,11 +270,13 @@ function drawWheel() {
 
 function createWheel() {
 
-    let count =
+    const count =
         Number(participantInput.value);
 
 
-    /* VALIDATION */
+    /* =========================
+       VALIDATION
+    ========================= */
 
     if (
         !Number.isInteger(count) ||
@@ -270,13 +295,17 @@ function createWheel() {
     numberOfParticipants = count;
 
 
-    /* RANDOM NUMBER ORDER */
+    /* =========================
+       CREATE RANDOM NUMBERS
+    ========================= */
 
     participants =
         createParticipants(count);
 
 
-    /* RESET ROTATION */
+    /* =========================
+       RESET ROTATION
+    ========================= */
 
     currentRotation = 0;
 
@@ -286,18 +315,34 @@ function createWheel() {
         "rotate(0deg)";
 
 
-    /* DRAW */
+    /* =========================
+       DRAW
+    ========================= */
 
     drawWheel();
 
 
-    /* RESET RESULT */
+    /* =========================
+       RESET RESULT
+    ========================= */
 
     resultText.textContent =
         "Lucky Number: -";
 
 
     spinBtn.disabled = false;
+}
+
+
+/* =========================
+   NORMALIZE ANGLE
+========================= */
+
+function normalizeAngle(angle) {
+
+    return (
+        (angle % 360) + 360
+    ) % 360;
 }
 
 
@@ -311,6 +356,10 @@ function spinWheel() {
         return;
     }
 
+
+    /* =========================
+       CHECK WHEEL
+    ========================= */
 
     if (participants.length === 0) {
 
@@ -334,7 +383,7 @@ function spinWheel() {
 
 
     /* =========================
-       SELECT RANDOM SEGMENT
+       SELECT WINNER
     ========================= */
 
     const winnerIndex =
@@ -348,44 +397,107 @@ function spinWheel() {
         participants.length;
 
 
+    /* =========================
+       ANGLE OF EACH SEGMENT
+    ========================= */
+
     const segmentAngle =
         360 / count;
 
 
     /*
-       We want the selected segment
-       to stop exactly under the
-       top pointer.
-    */
+     * The center of segment 0 is:
+     *
+     * -90° + segmentAngle / 2
+     *
+     * Every other segment follows
+     * from there.
+     */
 
-    const targetAngle =
-        winnerIndex * segmentAngle +
-        segmentAngle / 2;
+    const segmentCenterAngle =
+        -90 +
+        (winnerIndex + 0.5) *
+        segmentAngle;
 
 
     /*
-       10+ COMPLETE ROTATIONS
+     * We need this segment center
+     * to finish exactly at -90°,
+     * which is where the pointer is.
+     */
 
-       10 rotations = 3600 degrees
+    const desiredRotation =
+        -90 -
+        segmentCenterAngle;
 
-       Add extra random rotations
-       between 10 and 12.
-    */
+
+    /*
+     * Convert desired rotation to
+     * a 0–360 degree value.
+     */
+
+    const desiredNormalized =
+        normalizeAngle(
+            desiredRotation
+        );
+
+
+    /*
+     * Current wheel rotation may
+     * already contain several full
+     * rotations from previous spins.
+     *
+     * Find the smallest positive
+     * rotation needed to bring the
+     * selected segment to the pointer.
+     */
+
+    const currentNormalized =
+        normalizeAngle(
+            currentRotation
+        );
+
+
+    let additionalRotation =
+        desiredNormalized -
+        currentNormalized;
+
+
+    if (additionalRotation < 0) {
+        additionalRotation += 360;
+    }
+
+
+    /*
+     * Add 10–12 complete rotations.
+     *
+     * This guarantees:
+     * - minimum 10 rotations
+     * - smooth long spin
+     * - correct final position
+     */
 
     const fullRotations =
-        10 + Math.floor(Math.random() * 3);
+        10 +
+        Math.floor(
+            Math.random() * 3
+        );
 
 
-    const totalRotation =
-        fullRotations * 360 +
-        (360 - targetAngle);
+    additionalRotation +=
+        fullRotations * 360;
 
 
-    currentRotation += totalRotation;
+    /*
+     * Update total rotation.
+     */
+
+    currentRotation +=
+        additionalRotation;
 
 
     /* =========================
-       APPLY 10 SECOND ANIMATION
+       START 10 SECOND SPIN
     ========================= */
 
     canvas.style.transition =
@@ -401,6 +513,12 @@ function spinWheel() {
     ========================= */
 
     setTimeout(() => {
+
+        /*
+         * The selected participant
+         * is guaranteed to be the
+         * segment under the pointer.
+         */
 
         const luckyNumber =
             participants[winnerIndex];
@@ -436,7 +554,7 @@ spinBtn.addEventListener(
 
 
 /* =========================
-   CREATE INITIAL WHEEL
+   INITIAL WHEEL
 ========================= */
 
 participants =
