@@ -13,8 +13,13 @@
 
     <div class="container">
 
+        <!-- Website Title -->
         <h1>🎡 Spin Challenge</h1>
-        <p class="subtitle">Spin the wheel and find your lucky number!</p>
+
+        <p class="subtitle">
+            Spin the wheel and find your lucky number!
+        </p>
+
 
         <!-- Participant Input -->
         <div class="input-section">
@@ -46,12 +51,22 @@
                 <!-- Red Needle -->
                 <div class="needle"></div>
 
+
                 <!-- Wheel -->
                 <div id="wheel" class="wheel">
 
+                    <!-- Customized Wheel Image -->
+                    <img
+                        src="images/wheel.png"
+                        class="wheel-image"
+                        alt="Spin Challenge Wheel"
+                    >
+
+                    <!-- Participant Numbers -->
                     <div id="numbersContainer"></div>
 
                 </div>
+
 
                 <!-- Center Circle -->
                 <div class="center-circle"></div>
@@ -60,13 +75,19 @@
 
 
             <!-- Spin Button -->
-            <button id="spinBtn" class="spin-btn">
+            <button
+                id="spinBtn"
+                class="spin-btn"
+            >
                 SPIN
             </button>
 
 
-            <!-- Result -->
-            <div id="result" class="result">
+            <!-- Winner Result -->
+            <div
+                id="result"
+                class="result"
+            >
                 Winner will appear here
             </div>
 
@@ -75,6 +96,7 @@
     </div>
 
 
+    <!-- JavaScript -->
     <script src="script.js"></script>
 
 </body>
