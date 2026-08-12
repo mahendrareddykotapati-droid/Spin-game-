@@ -2,27 +2,34 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
     <title>Spin Challenge</title>
 
     <link rel="stylesheet" href="style.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Courgette&display=swap"
+          rel="stylesheet">
 </head>
 
 <body>
 
     <div class="container">
 
-        <!-- Website Title -->
-        <h1>🎡 Spin Challenge</h1>
+        <!-- HEADER -->
+        <div class="header">
+            <div class="title">
+                🎡
+                <span>Spin Challenge</span>
+            </div>
 
-        <p class="subtitle">
-            Spin the wheel and find your lucky number!
-        </p>
+            <p>Spin the wheel and find your lucky number!</p>
+        </div>
 
 
-        <!-- Participant Input -->
-        <div class="input-section">
+        <!-- PARTICIPANT BOX -->
+        <div class="control-box">
 
             <label for="participantCount">
                 Number of Participants
@@ -33,7 +40,7 @@
                 id="participantCount"
                 min="2"
                 max="100"
-                placeholder="Enter 2 - 100"
+                value="16"
             >
 
             <button id="createWheelBtn">
@@ -43,60 +50,41 @@
         </div>
 
 
-        <!-- Wheel Section -->
-        <div id="gameSection" class="game-section">
+        <!-- WHEEL AREA -->
+        <div class="wheel-container">
 
-            <div class="wheel-container">
+            <!-- FIXED POINTER -->
+            <div class="pointer"></div>
 
-                <!-- Red Needle -->
-                <div class="needle"></div>
+            <!-- WHEEL -->
+            <canvas id="wheelCanvas"
+                    width="600"
+                    height="600">
+            </canvas>
 
+            <!-- CENTER -->
+            <div class="center-circle"></div>
 
-                <!-- Wheel -->
-                <div id="wheel" class="wheel">
-
-                    <!-- Customized Wheel Image -->
-                    <img
-                        src="images/wheel.png"
-                        class="wheel-image"
-                        alt="Spin Challenge Wheel"
-                    >
-
-                    <!-- Participant Numbers -->
-                    <div id="numbersContainer"></div>
-
-                </div>
+        </div>
 
 
-                <!-- Center Circle -->
-                <div class="center-circle"></div>
-
-            </div>
-
-
-            <!-- Spin Button -->
-            <button
-                id="spinBtn"
-                class="spin-btn"
-            >
-                SPIN
-            </button>
+        <!-- SPIN BUTTON -->
+        <button id="spinBtn" class="spin-button">
+            SPIN
+        </button>
 
 
-            <!-- Winner Result -->
-            <div
-                id="result"
-                class="result"
-            >
-                Winner will appear here
-            </div>
-
+        <!-- RESULT -->
+        <div class="result-box">
+            🏆
+            <span id="resultText">
+                Lucky Number: -
+            </span>
         </div>
 
     </div>
 
 
-    <!-- JavaScript -->
     <script src="script.js"></script>
 
 </body>
