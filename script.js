@@ -1,5 +1,6 @@
 /* =====================================================
    SPIN CHALLENGE
+   Customized Wheel Image Version
 ===================================================== */
 
 
@@ -17,23 +18,7 @@ let spinning = false;
 
 
 /* =========================
-   RAINBOW COLOURS
-========================= */
-
-const rainbowColors = [
-    "#ff0000", // Red
-    "#ff7f00", // Orange
-    "#ffff00", // Yellow
-    "#00cc44", // Green
-    "#00cfff", // Cyan
-    "#0066ff", // Blue
-    "#8a2be2", // Violet
-    "#ff00aa"  // Pink
-];
-
-
-/* =========================
-   GET ELEMENTS
+   GET HTML ELEMENTS
 ========================= */
 
 const participantInput =
@@ -58,29 +43,35 @@ const result =
     document.getElementById("result");
 
 
-/* =========================
+/* =====================================================
+   CREATE WHEEL BUTTON
+===================================================== */
+
+createWheelBtn.addEventListener(
+    "click",
+    createWheel
+);
+
+
+/* =====================================================
    CREATE WHEEL
-========================= */
-
-createWheelBtn.addEventListener("click", createWheel);
-
-
-/* =========================
-   CREATE WHEEL FUNCTION
-========================= */
+===================================================== */
 
 function createWheel() {
 
-    const count = Number(participantInput.value);
+    const count =
+        Number(participantInput.value);
 
 
-    /* -------------------------
+    /* =========================
        VALIDATION
-    ------------------------- */
+    ========================= */
 
     if (!Number.isInteger(count)) {
 
-        alert("Please enter the number of participants.");
+        alert(
+            "Please enter the number of participants."
+        );
 
         return;
     }
@@ -88,7 +79,9 @@ function createWheel() {
 
     if (count < 2) {
 
-        alert("Minimum participants is 2.");
+        alert(
+            "Minimum participants is 2."
+        );
 
         return;
     }
@@ -96,42 +89,48 @@ function createWheel() {
 
     if (count > 100) {
 
-        alert("Maximum participants is 100.");
+        alert(
+            "Maximum participants is 100."
+        );
 
         return;
     }
 
 
-    /* -------------------------
-       SAVE COUNT
-    ------------------------- */
+    /* =========================
+       SAVE PARTICIPANT COUNT
+    ========================= */
 
     participantCount = count;
 
 
-    /* -------------------------
-       CREATE NUMBERS
-    ------------------------- */
+    /* =========================
+       CREATE PARTICIPANT NUMBERS
+    ========================= */
 
     participants = [];
 
-    for (let i = 1; i <= count; i++) {
+    for (
+        let i = 1;
+        i <= count;
+        i++
+    ) {
 
         participants.push(i);
 
     }
 
 
-    /* -------------------------
+    /* =========================
        RANDOMIZE NUMBERS
-    ------------------------- */
+    ========================= */
 
     shuffleArray(participants);
 
 
-    /* -------------------------
-       RESET ROTATION
-    ------------------------- */
+    /* =========================
+       RESET WHEEL
+    ========================= */
 
     currentRotation = 0;
 
@@ -141,18 +140,19 @@ function createWheel() {
         "rotate(0deg)";
 
 
-    /* -------------------------
-       CREATE WHEEL
-    ------------------------- */
+    /* =========================
+       CREATE NUMBERS
+    ========================= */
 
-    drawWheel();
+    drawNumbers();
 
 
-    /* -------------------------
+    /* =========================
        SHOW GAME
-    ------------------------- */
+    ========================= */
 
-    gameSection.style.display = "flex";
+    gameSection.style.display =
+        "flex";
 
 
     result.textContent =
@@ -165,137 +165,155 @@ function createWheel() {
 
 
 /* =====================================================
-   DRAW WHEEL
+   DRAW PARTICIPANT NUMBERS
 ===================================================== */
 
-function drawWheel() {
+function drawNumbers() {
+
+    /* Remove old numbers */
 
     numbersContainer.innerHTML = "";
 
+
+    /* Angle of each participant section */
 
     const segmentAngle =
         360 / participantCount;
 
 
-    /* -------------------------
-       CREATE COLOUR LIST
-    ------------------------- */
+    /* =========================
+       NUMBER SIZE
+    ========================= */
 
-    const colors =
-        createColorPattern(participantCount);
-
-
-    /* -------------------------
-       CREATE SEGMENT BACKGROUND
-    ------------------------- */
-
-    let gradientParts = [];
+    let fontSize;
 
 
-    for (let i = 0; i < participantCount; i++) {
+    if (participantCount <= 10) {
 
-        const start =
-            i * segmentAngle;
+        fontSize = 25;
 
-        const end =
-            (i + 1) * segmentAngle;
+    }
 
-        gradientParts.push(
-            `${colors[i]} ${start}deg ${end}deg`
-        );
+    else if (participantCount <= 20) {
+
+        fontSize = 20;
+
+    }
+
+    else if (participantCount <= 40) {
+
+        fontSize = 14;
+
+    }
+
+    else if (participantCount <= 70) {
+
+        fontSize = 11;
+
+    }
+
+    else {
+
+        fontSize = 9;
 
     }
 
 
-    wheel.style.background =
-        `conic-gradient(from -90deg, ${gradientParts.join(",")})`;
+    /* =========================
+       NUMBER DISTANCE FROM CENTER
+    ========================= */
+
+    let radius;
 
 
-    /* -------------------------
-       CREATE NUMBERS
-    ------------------------- */
+    if (participantCount <= 20) {
 
-    for (let i = 0; i < participantCount; i++) {
+        radius = 39;
+
+    }
+
+    else if (participantCount <= 50) {
+
+        radius = 42;
+
+    }
+
+    else {
+
+        radius = 44;
+
+    }
+
+
+    /* =========================
+       CREATE EACH NUMBER
+    ========================= */
+
+    for (
+        let i = 0;
+        i < participantCount;
+        i++
+    ) {
 
         const number =
             document.createElement("div");
 
-        number.className = "number";
+
+        number.className =
+            "number";
+
 
         number.textContent =
             participants[i];
-
-
-        /* -------------------------
-           NUMBER SIZE
-        ------------------------- */
-
-        let fontSize;
-
-        if (participantCount <= 10) {
-
-            fontSize = 25;
-
-        } else if (participantCount <= 20) {
-
-            fontSize = 20;
-
-        } else if (participantCount <= 40) {
-
-            fontSize = 14;
-
-        } else if (participantCount <= 70) {
-
-            fontSize = 11;
-
-        } else {
-
-            fontSize = 9;
-
-        }
 
 
         number.style.fontSize =
             `${fontSize}px`;
 
 
-        /* -------------------------
-           NUMBER POSITION
-        ------------------------- */
+        /* =========================
+           FIND NUMBER ANGLE
+        ========================= */
 
         const angle =
             i * segmentAngle +
             segmentAngle / 2;
 
 
-        /*
-           Keep numbers near the outer
-           edge of the wheel.
-        */
-
-        const radiusPercent =
-            participantCount <= 20
-                ? 38
-                : 42;
-
+        /* =========================
+           NUMBER POSITION
+        ========================= */
 
         number.style.width =
-            `${Math.max(35, segmentAngle * 0.85)}px`;
+            `${Math.max(
+                30,
+                segmentAngle * 0.85
+            )}px`;
+
 
         number.style.height =
-            `${Math.max(25, segmentAngle * 0.35)}px`;
+            `${Math.max(
+                25,
+                segmentAngle * 0.35
+            )}px`;
 
 
         number.style.transform =
             `
             translate(-50%, -50%)
             rotate(${angle}deg)
-            translateY(-${radiusPercent * 1.9}px)
+            translateY(-${radius}%)
             rotate(${-angle}deg)
             `;
 
 
-        numbersContainer.appendChild(number);
+        /* =========================
+           ADD NUMBER TO WHEEL
+        ========================= */
+
+        numbersContainer.appendChild(
+            number
+        );
 
     }
 
@@ -303,89 +321,7 @@ function drawWheel() {
 
 
 /* =====================================================
-   CREATE COLOUR PATTERN
-===================================================== */
-
-function createColorPattern(count) {
-
-    const colors = [];
-
-
-    for (let i = 0; i < count; i++) {
-
-        let color;
-
-
-        /*
-           Try to choose a colour different
-           from the previous segment.
-        */
-
-        const previousColor =
-            colors[i - 1];
-
-
-        const availableColors =
-            rainbowColors.filter(
-                c => c !== previousColor
-            );
-
-
-        color =
-            availableColors[
-                Math.floor(
-                    Math.random() *
-                    availableColors.length
-                )
-            ];
-
-
-        colors.push(color);
-
-    }
-
-
-    /*
-       Fix first/last segment if they have
-       the same colour because they are
-       also neighbours on a circle.
-    */
-
-    if (
-        count > 2 &&
-        colors[0] === colors[count - 1]
-    ) {
-
-        const availableColors =
-            rainbowColors.filter(
-                c =>
-                    c !== colors[count - 2] &&
-                    c !== colors[0]
-            );
-
-
-        if (availableColors.length > 0) {
-
-            colors[count - 1] =
-                availableColors[
-                    Math.floor(
-                        Math.random() *
-                        availableColors.length
-                    )
-                ];
-
-        }
-
-    }
-
-
-    return colors;
-
-}
-
-
-/* =====================================================
-   SHUFFLE ARRAY
+   SHUFFLE PARTICIPANTS
 ===================================================== */
 
 function shuffleArray(array) {
@@ -420,7 +356,10 @@ function shuffleArray(array) {
    SPIN BUTTON
 ===================================================== */
 
-spinBtn.addEventListener("click", spinWheel);
+spinBtn.addEventListener(
+    "click",
+    spinWheel
+);
 
 
 /* =====================================================
@@ -429,20 +368,34 @@ spinBtn.addEventListener("click", spinWheel);
 
 function spinWheel() {
 
+    /* Prevent multiple clicks */
+
     if (spinning) {
+
         return;
+
     }
 
+
+    /* Make sure wheel exists */
 
     if (participantCount < 2) {
 
-        alert("Create the wheel first.");
+        alert(
+            "Create the wheel first."
+        );
 
         return;
+
     }
 
 
+    /* =========================
+       START SPINNING
+    ========================= */
+
     spinning = true;
+
 
     spinBtn.disabled = true;
 
@@ -478,58 +431,61 @@ function spinWheel() {
         360 / participantCount;
 
 
-    /*
-       Find the center of the winner's segment.
-    */
+    /* =================================================
+       WINNER CENTER ANGLE
+    ================================================= */
 
     const winnerCenterAngle =
-        winnerIndex * segmentAngle +
+        winnerIndex *
+        segmentAngle +
         segmentAngle / 2;
 
 
     /* =================================================
-       EXACTLY 10 ROTATIONS
+       CURRENT WHEEL ROTATION
+    ================================================= */
+
+    const currentMod =
+        (
+            currentRotation % 360 +
+            360
+        ) % 360;
+
+
+    /* =================================================
+       ALIGN WINNER WITH NEEDLE
+    ================================================= */
+
+    let alignment =
+        (
+            360 -
+            winnerCenterAngle -
+            currentMod
+        ) % 360;
+
+
+    if (alignment < 0) {
+
+        alignment += 360;
+
+    }
+
+
+    /* =================================================
+       EXACTLY 10 FULL ROTATIONS
     ================================================= */
 
     const tenRotations =
         360 * 10;
 
 
-    /*
-       Current rotation modulo 360.
-    */
-
-    const currentMod =
-        ((currentRotation % 360) + 360) % 360;
-
-
-    /*
-       Calculate the smallest positive rotation
-       needed to place winner at the red needle.
-    */
-
-    let alignment =
-        (360 - winnerCenterAngle - currentMod) % 360;
-
-
-    if (alignment < 0) {
-        alignment += 360;
-    }
-
-
-    /*
-       Total rotation:
-
-       10 complete rotations
-       +
-       alignment
-
-       Every spin therefore has the
-       same 10 full rotations.
-    */
+    /* =================================================
+       TOTAL ROTATION
+    ================================================= */
 
     const totalRotation =
-        tenRotations + alignment;
+        tenRotations +
+        alignment;
 
 
     currentRotation +=
@@ -538,6 +494,8 @@ function spinWheel() {
 
     /* =================================================
        10 SECOND SPIN
+       
+       FAST → GRADUALLY SLOW
     ================================================= */
 
     wheel.style.transition =
@@ -549,23 +507,34 @@ function spinWheel() {
 
 
     /* =================================================
-       SHOW RESULT AFTER EXACTLY 10 SECONDS
+       WAIT EXACTLY 10 SECONDS
     ================================================= */
 
-    setTimeout(() => {
+    setTimeout(
+        function () {
 
-        result.innerHTML =
-            `🏆 Lucky Number: <strong>${winner}</strong>`;
+            /* =========================
+               DISPLAY WINNER
+            ========================= */
+
+            result.innerHTML =
+                `🏆 Lucky Number: <strong>${winner}</strong>`;
 
 
-        spinning = false;
+            /* =========================
+               ENABLE BUTTONS AGAIN
+            ========================= */
 
-        spinBtn.disabled = false;
+            spinning = false;
 
-        createWheelBtn.disabled = false;
+            spinBtn.disabled = false;
 
-        participantInput.disabled = false;
+            createWheelBtn.disabled = false;
 
-    }, 10000);
+            participantInput.disabled = false;
 
-           }
+        },
+        10000
+    );
+
+}
